@@ -46,18 +46,20 @@ const Authprovider = ({ children }) => {
             if (currentUser) {
                 axios.post('https://assignment-12-sports-academies-server-site-t-0-n-m-0-y.vercel.app/jwt', { email: currentUser.email })
                     .then(res => {
-                        console.log(res.data.accessToken);
                         localStorage.setItem('access-token', res.data.accessToken)
-                        setLoading(false);
                     })
+                    .finally(() => {
+                        setLoading(false);
+                    });
             }
             else {
-                localStorage.removeItem('access-token')
+                localStorage.removeItem('access-token');
+                setLoading(false);
             }
-        })
+        });
         return () => {
             return unsubscribe();
-        }
+        };
     }, [])
 
     const authInfo = {

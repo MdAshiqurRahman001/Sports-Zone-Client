@@ -1,3 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ─── Global Base ──────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Inter', 'Outfit', system-ui, sans-serif;
+  }
+
+  body {
+    background-color: #0f172a;
+    color: #f1f5f9;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #0f172a; }
+  ::-webkit-scrollbar-thumb { background: #ea580c; border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #c2410c; }
+
+  /* Text selection */
+  ::selection { background-color: #ea580c; color: #fff; }
+}
+
+/* ─── Reusable Components ──────────────────────────────────── */
+@layer components {
+
+  /* Section heading style */
+  .section-title {
+    @apply text-3xl md:text-5xl font-display font-bold text-center mb-4;
+    background: linear-gradient(135deg, #f1f5f9 0%, #fb923c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-subtitle {
+    @apply text-center text-slate-400 text-base md:text-lg max-w-2xl mx-auto mb-12;
+  }
+
+  /* Premium card */
+  .card-premium {
+    @apply rounded-2xl border border-slate-700/50 bg-gradient-to-br from-slate-800 to-slate-900
+           shadow-card hover:shadow-card-hover hover:-translate-y-1.5 transition-all duration-300;
+  }
+
+  /* Orange gradient button */
+  .btn-brand {
+    @apply bg-gradient-to-r from-slate-800 to-orange-700 text-white font-semibold
+           px-6 py-3 rounded-xl border-none hover:from-slate-700 hover:to-orange-600
+           transition-all duration-200 shadow-md hover:shadow-glow-sm;
+  }
+
+  /* Outline button */
+  .btn-outline-brand {
+    @apply border border-orange-600 text-orange-500 font-semibold px-6 py-3 rounded-xl
+           hover:bg-orange-600 hover:text-white transition-all duration-200;
+  }
+
+  /* Input field */
+  .input-brand {
+    @apply w-full bg-slate-800 border border-slate-600 text-slate-100 rounded-xl
+           px-4 py-3 placeholder-slate-500 focus:outline-none focus:border-orange-500
+           focus:ring-1 focus:ring-orange-500/50 transition-all duration-200;
+  }
+
+  /* Badge */
+  .badge-brand {
+    @apply inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full
+           bg-orange-500/10 text-orange-400 border border-orange-500/20;
+  }
+
+  /* Section wrapper */
+  .section-wrapper {
+    @apply max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-24;
+  }
+
+  /* Stat card */
+  .stat-card {
+    @apply text-center p-6 rounded-2xl border border-slate-700/50 bg-slate-800/50 backdrop-blur;
+  }
+
+  /* Table styles */
+  .table-dark {
+    @apply w-full text-sm text-left;
+  }
+  .table-dark thead tr {
+    @apply bg-slate-800 text-slate-400 uppercase text-xs tracking-wider;
+  }
+  .table-dark tbody tr {
+    @apply border-b border-slate-800 hover:bg-slate-800/50 transition-colors;
+  }
+  .table-dark tbody td {
+    @apply py-4 px-4 text-slate-300;
+  }
+}
+
+/* ─── Utilities ────────────────────────────────────────────── */
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #f1f5f9 0%, #fb923c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-orange {
+    background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-glow-orange {
+    background: radial-gradient(circle at 50% 50%, rgba(234,88,12,0.12) 0%, transparent 70%);
+  }
+
+  .border-glow {
+    border: 1px solid rgba(234, 88, 12, 0.3);
+    box-shadow: 0 0 20px rgba(234, 88, 12, 0.1);
+  }
+
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+  .animate-delay-400 { animation-delay: 400ms; }
+}

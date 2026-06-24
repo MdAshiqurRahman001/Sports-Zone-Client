@@ -29,10 +29,9 @@ const AddClass = () => {
             .then(image => {
                 const imgURL = image.data.display_url;
                 const { name, price, availableSeats, instructor, email, numStudents } = data;
-                const newCLass = { name, price: parseFloat(price), availableSeats: parseFloat(availableSeats), instructor, email, numStudents: parseFloat(numStudents), image: imgURL }
-                console.log(newCLass);
+                const newClass = { name, price: parseFloat(price), availableSeats: parseFloat(availableSeats), instructor, email, numStudents: parseFloat(numStudents), image: imgURL }
 
-                AXIOS.post('/classes', newCLass)
+                AXIOS.post('/classes', newClass)
                     .then(data => {
                         if (data.data.insertedId) {
                             reset();
@@ -48,7 +47,6 @@ const AddClass = () => {
                         }
                     })
             })
-        console.log(data)
     };
 
     return (

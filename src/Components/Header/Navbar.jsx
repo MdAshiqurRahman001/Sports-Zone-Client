@@ -1,103 +1,186 @@
-import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState, useEffect } from "react";
+import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
 import useSelectedClasses from "../../Hooks/useSelectedClasses";
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion";
+import { FaBars, FaTimes, FaShoppingCart } from "react-icons/fa";
 
 const Navbar = () => {
-
     const { user, logOut } = useContext(AuthContext);
     const [selectedclasses] = useSelectedClasses();
+    const [scrolled, setScrolled] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', onScroll);
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
 
     const handleSignOut = () => {
-        logOut()
-            .then(() => { })
-            .catch(error => console.log(error))
-    }
+        logOut().catch(error => console.error(error));
+        setMobileOpen(false);
+    };
 
-    const navbarItems =
-        <>
-            <motion.div className="box"
-                whileHover={{ scale: 1.3 }}
-                whileTap={{ scale: .9 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }} >
-                <Link to={'/'}><li className="hover:bg-gradient-to-r from-slate-800 to-orange-800 text-white  p-3 rounded-lg mr-5">HOME</li></Link>
-            </motion.div>
-            <motion.div className="box"
-                whileHover={{ scale: 1.3 }}
-                whileTap={{ scale: .9 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }} >
-                <Link to={'/instructors'}><li className="hover:bg-gradient-to-r from-slate-800 to-orange-800 text-white  p-3 rounded-lg mr-5">INSTRUCTORS</li></Link>
-            </motion.div>
-            <motion.div className="box"
-                whileHover={{ scale: 1.3 }}
-                whileTap={{ scale: .9 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }} >
-                <Link to={'/classes'}><li className="hover:bg-gradient-to-r from-slate-800 to-orange-800 text-white  p-3 rounded-lg mr-5">CLASSES</li></Link>
-            </motion.div>
-            <motion.div className="box"
-                whileHover={{ scale: 1.3 }}
-                whileTap={{ scale: .9 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }} >
-                <Link to={'/dashboard/dashhome'}><li className=" hover:bg-gradient-to-r from-slate-800 to-orange-800 text-white p-3 rounded-lg">DASHBOARD + {selectedclasses?.length || ' '}</li></Link>
-            </motion.div>
-        </>
+    const linkClass = ({ isActive }) =>
+        `relative text-sm font-semibold tracking-wide transition-colors duration-200 py-1
+        ${isActive ? 'text-orange-400' : 'text-slate-300 hover:text-orange-400'}
+        after:absolute after:bottom-0 after:left-0 after:h-0.5 after:rounded-full after:bg-orange-500
+        after:transition-all after:duration-300
+        ${isActive ? 'after:w-full' : 'after:w-0 hover:after:w-full'}`;
+
+    const navItems = [
+        { to: '/', label: 'Home' },
+        { to: '/instructors', label: 'Instructors' },
+        { to: '/classes', label: 'Classes' },
+        { to: '/dashboard/dashhome', label: 'Dashboard' },
+    ];
 
     return (
-        <div>
-            <div className="navbar fixed z-10 bg-black bg-opacity-60 text-white">
-                <div className="navbar-start  hidden lg:flex">
-                    <ul className="menu menu-horizontal px-1">
-                        {navbarItems}
-                    </ul>
-                </div>
+        <>
+            <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300
+                ${scrolled
+                    ? 'bg-slate-900/95 backdrop-blur-lg shadow-lg border-b border-slate-800'
+                    : 'bg-transparent'}`}>
+                <div className="max-w-7xl mx-auto px-4 md:px-8">
+                    <div className="flex items-center justify-between h-16 md:h-20">
 
-                <div className="navbar-center">
-                    <div className="dropdown">
-                        <label tabIndex={0} className="btn btn-ghost lg:hidden">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
-                        </label>
-                        <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-orange-500 hover:bg-orange-800 rounded-box w-52">
-                            {navbarItems}
-                        </ul>
-                    </div>
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0FvJKoWnnZoq_Sg7TcatuUt_OLjrjlY-dW0FrXdipH-F7UmgFSp2ppnnUp5Fqua8s3Q&usqp=CAU" className="w-24 md:w-44" alt="" />
-                </div>
-
-                <div className="navbar-end">
-                    {
-                        user ?
-                            <motion.div className="box"
-                                whileHover={{ scale: 1.3 }}
-                                whileTap={{ scale: .9 }}
-                                transition={{ type: "spring", stiffness: 400, damping: 17 }} >
-                                <Link onClick={handleSignOut} className="mr-2 bg-base-800 p-2 lg:p-3 rounded-lg hover:bg-gradient-to-r from-slate-800 to-orange-800 text-white "> <button>LOGOUT</button></Link>
-                            </motion.div>
-                            :
-                            <motion.div className="box"
-                                whileHover={{ scale: 1.3 }}
-                                whileTap={{ scale: .9 }}
-                                transition={{ type: "spring", stiffness: 400, damping: 17 }} >
-                                <Link className="mr-2 bg-base-800 p-2 lg:p-3  rounded-lg hover:bg-gradient-to-r from-slate-800 to-orange-800 text-white " to={"/login"}> <button>LOGIN</button></Link>
-                            </motion.div>
-                    }
-                    {
-                        user ?
-                            <div className="tooltip tooltip-bottom" data-tip={user.displayName}>
-                                <img className="w-10 h-10 lg:h-14 lg:w-14 rounded-full" src={user.photoURL} referrerPolicy="no-referrer" />
+                        {/* Logo */}
+                        <Link to="/" className="flex items-center gap-2 group">
+                            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center shadow-glow-sm group-hover:shadow-glow-orange transition-all duration-300">
+                                <span className="text-white font-bold text-lg">⚡</span>
                             </div>
-                            :
-                            <motion.div className="box"
-                                whileHover={{ scale: 1.3 }}
-                                whileTap={{ scale: .9 }}
-                                transition={{ type: "spring", stiffness: 400, damping: 17 }} >
-                                <Link className="mr-2 bg-base-800 p-2 lg:p-3 text-white rounded-lg hover:bg-gradient-to-r from-slate-800 to-orange-800" to={"/signup"}> <button>SIGN UP</button></Link>
-                            </motion.div>
-                    }
-                </div>
+                            <span className="text-xl font-display font-bold text-gradient hidden sm:block">
+                                Sports Zone
+                            </span>
+                        </Link>
 
-            </div>
-        </div>
+                        {/* Desktop Nav */}
+                        <div className="hidden lg:flex items-center gap-8">
+                            {navItems.map(item => (
+                                <NavLink key={item.to} to={item.to} className={linkClass} end={item.to === '/'}>
+                                    {item.label}
+                                    {item.to === '/dashboard/dashhome' && selectedclasses?.length > 0 && (
+                                        <span className="ml-1.5 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-orange-500 text-white">
+                                            {selectedclasses.length}
+                                        </span>
+                                    )}
+                                </NavLink>
+                            ))}
+                        </div>
+
+                        {/* Right Side */}
+                        <div className="flex items-center gap-3">
+                            {/* Cart Badge */}
+                            {user && selectedclasses?.length > 0 && (
+                                <Link to="/dashboard/selectedclass" className="relative p-2 text-slate-400 hover:text-orange-400 transition-colors lg:hidden">
+                                    <FaShoppingCart className="text-lg" />
+                                    <span className="absolute -top-1 -right-1 w-4 h-4 text-[10px] font-bold rounded-full bg-orange-500 text-white flex items-center justify-center">
+                                        {selectedclasses.length}
+                                    </span>
+                                </Link>
+                            )}
+
+                            {user ? (
+                                <div className="hidden lg:flex items-center gap-3">
+                                    <div className="tooltip tooltip-bottom" data-tip={user.displayName || 'User'}>
+                                        <img
+                                            src={user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'U')}&background=ea580c&color=fff`}
+                                            alt={user.displayName}
+                                            referrerPolicy="no-referrer"
+                                            className="w-9 h-9 rounded-full object-cover border-2 border-orange-500 hover:border-orange-400 transition-all shadow-glow-sm"
+                                        />
+                                    </div>
+                                    <motion.button
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={handleSignOut}
+                                        className="btn-brand text-sm px-4 py-2">
+                                        Sign Out
+                                    </motion.button>
+                                </div>
+                            ) : (
+                                <div className="hidden lg:flex items-center gap-2">
+                                    <Link to="/login" className="text-sm font-semibold text-slate-300 hover:text-orange-400 transition-colors px-3 py-2">
+                                        Login
+                                    </Link>
+                                    <Link to="/signup" className="btn-brand text-sm px-5 py-2">
+                                        Get Started
+                                    </Link>
+                                </div>
+                            )}
+
+                            {/* Mobile Menu Toggle */}
+                            <button
+                                onClick={() => setMobileOpen(!mobileOpen)}
+                                className="lg:hidden p-2 text-slate-300 hover:text-orange-400 transition-colors">
+                                {mobileOpen ? <FaTimes className="text-xl" /> : <FaBars className="text-xl" />}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Mobile Menu Overlay */}
+            <AnimatePresence>
+                {mobileOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed top-16 left-0 right-0 z-40 bg-slate-900/98 backdrop-blur-lg border-b border-slate-800 lg:hidden">
+                        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-4">
+                            {navItems.map(item => (
+                                <NavLink
+                                    key={item.to}
+                                    to={item.to}
+                                    end={item.to === '/'}
+                                    onClick={() => setMobileOpen(false)}
+                                    className={({ isActive }) =>
+                                        `text-base font-semibold py-2 border-b border-slate-800 transition-colors
+                                        ${isActive ? 'text-orange-400' : 'text-slate-300 hover:text-orange-400'}`
+                                    }>
+                                    {item.label}
+                                </NavLink>
+                            ))}
+                            <div className="pt-4 flex flex-col gap-3">
+                                {user ? (
+                                    <>
+                                        <div className="flex items-center gap-3 py-2">
+                                            <img
+                                                src={user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'U')}&background=ea580c&color=fff`}
+                                                alt={user.displayName}
+                                                referrerPolicy="no-referrer"
+                                                className="w-10 h-10 rounded-full object-cover border-2 border-orange-500"
+                                            />
+                                            <div>
+                                                <p className="text-sm font-semibold text-white">{user.displayName}</p>
+                                                <p className="text-xs text-slate-400">{user.email}</p>
+                                            </div>
+                                        </div>
+                                        <button onClick={handleSignOut} className="btn-brand w-full text-center py-3">
+                                            Sign Out
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-outline-brand w-full text-center py-3">
+                                            Login
+                                        </Link>
+                                        <Link to="/signup" onClick={() => setMobileOpen(false)} className="btn-brand w-full text-center py-3">
+                                            Get Started
+                                        </Link>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Spacer */}
+            <div className="h-16 md:h-20" />
+        </>
     );
 };
 

@@ -1,6 +1,6 @@
 import { Elements } from "@stripe/react-stripe-js";
 import { Helmet } from "react-helmet-async";
-import Payment from "./Payment";
+import CheckoutForm from "./CheckoutForm";
 import { loadStripe } from "@stripe/stripe-js";
 import useSelectedClasses from "../../Hooks/useSelectedClasses";
 
@@ -21,7 +21,7 @@ const Checkout = () => {
 
             <div className="mx-44">
                 <Elements stripe={stripePromise}>
-                    <Payment selectedclasses={selectedclasses} price={price}></Payment>
+                    <CheckoutForm selectedclasses={selectedclasses} price={price}></CheckoutForm>
                 </Elements>
             </div>
 

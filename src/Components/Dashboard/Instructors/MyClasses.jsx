@@ -4,11 +4,10 @@ import useAddedClass from "../../../Hooks/useAddedClass";
 const MyClasses = () => {
 
     const [addedclasses] = useAddedClass()
-    console.log(addedclasses);
     return (
         <div className="text-center">
             <Helmet>
-                <title>Sports Zone | Manage Users</title>
+                <title>Sports Zone | My Classes</title>
             </Helmet>
 
             <h1 className="my-10 font-bold text-4xl">My Classes</h1>
