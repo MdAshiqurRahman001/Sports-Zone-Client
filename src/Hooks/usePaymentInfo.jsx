@@ -6,12 +6,12 @@ import { useQuery } from "@tanstack/react-query";
 
 const usePaymentInfo = () => {
 
-    const { user, loading } = useContext(AuthContext);
+    const { user, loading: authLoading } = useContext(AuthContext);
     const [AXIOS] = useAxios();
 
-    const { data: paymentInfo = [], refetch } = useQuery({
+    const { data: paymentInfo = [], refetch, isLoading: loading } = useQuery({
         queryKey: ['paymentInfo', user?.email],
-        enabled: !loading,
+        enabled: !authLoading,
         queryFn: async () => {
             const res = await AXIOS(`/paymentInfo?email=${user.email}`);
             console.log(res.data);
@@ -19,7 +19,7 @@ const usePaymentInfo = () => {
         }
     })
 
-    return [paymentInfo, refetch]
+    return [paymentInfo, refetch, loading]
 };
 
 export default usePaymentInfo;

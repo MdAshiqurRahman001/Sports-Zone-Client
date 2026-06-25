@@ -5,9 +5,10 @@ import useManageClass from "../../../Hooks/useManageClass";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { FaCheck, FaTimes, FaCommentDots } from "react-icons/fa";
+import SkeletonRow from "../../UI/SkeletonRow";
 
 const ManageClasses = () => {
-    const [manageClasses, refetch] = useManageClass();
+    const [manageClasses, refetch, loading] = useManageClass();
     const [AXIOS] = useAxios();
     const [feedbackModal, setFeedbackModal] = useState({ open: false, classId: null, feedback: '' });
 
@@ -91,52 +92,56 @@ const ManageClasses = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-800">
-                            {manageClasses.map((classs, i) => (
-                                <motion.tr
-                                    key={classs._id}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ delay: i * 0.04 }}
-                                    className="bg-slate-900/50 hover:bg-slate-800/50 transition-colors">
-                                    <td className="px-4 py-4">
-                                        <div className="flex items-center gap-3">
-                                            <img src={classs.image} alt={classs.name} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
-                                            <span className="font-semibold text-white text-sm">{classs.name}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-4 py-4">
-                                        <p className="text-white font-medium text-sm">{classs.instructor}</p>
-                                        <p className="text-slate-500 text-xs">{classs.email}</p>
-                                    </td>
-                                    <td className="px-4 py-4 text-slate-300">{classs.availableSeats}</td>
-                                    <td className="px-4 py-4 text-orange-400 font-bold">${classs.price}</td>
-                                    <td className="px-4 py-4">{statusBadge(classs.status)}</td>
-                                    <td className="px-4 py-4">
-                                        <div className="flex items-center gap-2">
-                                            <button
-                                                onClick={() => handleApprove(classs)}
-                                                disabled={classs.status === 'Approved'}
-                                                title="Approve"
-                                                className="p-2 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                                                <FaCheck className="text-xs" />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDeny(classs)}
-                                                disabled={classs.status === 'Denied'}
-                                                title="Deny"
-                                                className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                                                <FaTimes className="text-xs" />
-                                            </button>
-                                            <button
-                                                onClick={() => setFeedbackModal({ open: true, classId: classs._id, feedback: '' })}
-                                                title="Feedback"
-                                                className="p-2 rounded-lg bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 transition-all">
-                                                <FaCommentDots className="text-xs" />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </motion.tr>
-                            ))}
+                            {loading ? (
+                                [...Array(5)].map((_, i) => <SkeletonRow key={i} />)
+                            ) : (
+                                manageClasses.map((classs, i) => (
+                                    <motion.tr
+                                        key={classs._id}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ delay: i * 0.04 }}
+                                        className="bg-slate-900/50 hover:bg-slate-800/50 transition-colors">
+                                        <td className="px-4 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <img src={classs.image} alt={classs.name} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+                                                <span className="font-semibold text-white text-sm">{classs.name}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-4 py-4">
+                                            <p className="text-white font-medium text-sm">{classs.instructor}</p>
+                                            <p className="text-slate-500 text-xs">{classs.email}</p>
+                                        </td>
+                                        <td className="px-4 py-4 text-slate-300">{classs.availableSeats}</td>
+                                        <td className="px-4 py-4 text-orange-400 font-bold">${classs.price}</td>
+                                        <td className="px-4 py-4">{statusBadge(classs.status)}</td>
+                                        <td className="px-4 py-4">
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => handleApprove(classs)}
+                                                    disabled={classs.status === 'Approved'}
+                                                    title="Approve"
+                                                    className="p-2 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                                                    <FaCheck className="text-xs" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeny(classs)}
+                                                    disabled={classs.status === 'Denied'}
+                                                    title="Deny"
+                                                    className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                                                    <FaTimes className="text-xs" />
+                                                </button>
+                                                <button
+                                                    onClick={() => setFeedbackModal({ open: true, classId: classs._id, feedback: '' })}
+                                                    title="Feedback"
+                                                    className="p-2 rounded-lg bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 transition-all">
+                                                    <FaCommentDots className="text-xs" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </motion.tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>

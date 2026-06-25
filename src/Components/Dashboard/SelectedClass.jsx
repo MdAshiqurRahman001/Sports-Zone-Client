@@ -12,7 +12,7 @@ import CheckoutForm from "./CheckoutForm";
 const stripePromise = loadStripe(import.meta.env.VITE_PAYMENT_KEY);
 
 const SelectedClass = () => {
-    const [selectedclasses, refetch] = useSelectedClasses();
+    const [selectedclasses, refetch, loading] = useSelectedClasses();
     const [AXIOS] = useAxios();
 
     const totalPrice = selectedclasses.reduce((sum, item) => item.price + sum, 0);
@@ -56,7 +56,30 @@ const SelectedClass = () => {
                 <p className="text-slate-400 text-sm">Review and checkout your selected classes.</p>
             </div>
 
-            {selectedclasses.length === 0 ? (
+            {loading ? (
+                <div className="grid lg:grid-cols-3 gap-6 animate-pulse">
+                    <div className="lg:col-span-2 space-y-4">
+                        {[...Array(3)].map((_, i) => (
+                            <div key={i} className="flex gap-4 p-4 rounded-2xl bg-slate-800 border border-slate-700/50">
+                                <div className="w-20 h-20 rounded-xl bg-slate-700 shrink-0"></div>
+                                <div className="flex-1 py-2">
+                                    <div className="h-4 bg-slate-700 rounded w-1/3 mb-2"></div>
+                                    <div className="h-3 bg-slate-700 rounded w-1/4 mb-3"></div>
+                                    <div className="h-4 bg-slate-700 rounded w-1/5"></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="lg:col-span-1">
+                        <div className="sticky top-6 rounded-2xl bg-slate-800 border border-slate-700/50 p-6 h-64">
+                             <div className="h-6 bg-slate-700 rounded w-1/2 mb-6"></div>
+                             <div className="h-4 bg-slate-700 rounded w-full mb-4"></div>
+                             <div className="h-4 bg-slate-700 rounded w-3/4 mb-8"></div>
+                             <div className="h-10 bg-slate-700 rounded w-full"></div>
+                        </div>
+                    </div>
+                </div>
+            ) : selectedclasses.length === 0 ? (
                 <div className="text-center py-20">
                     <div className="w-16 h-16 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center mx-auto mb-4">
                         <FaCreditCard className="text-2xl text-slate-500" />

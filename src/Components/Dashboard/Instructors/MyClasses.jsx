@@ -1,9 +1,10 @@
 import { Helmet } from "react-helmet-async";
 import useAddedClass from "../../../Hooks/useAddedClass";
+import SkeletonRow from "../../UI/SkeletonRow";
 
 const MyClasses = () => {
 
-    const [addedclasses] = useAddedClass()
+    const [addedclasses, , loading] = useAddedClass()
     return (
         <div className="text-center">
             <Helmet>
@@ -26,7 +27,9 @@ const MyClasses = () => {
                         </thead>
 
                         <tbody>
-                            {
+                            {loading ? (
+                                [...Array(5)].map((_, i) => <SkeletonRow key={i} />)
+                            ) : (
                                 addedclasses.map((addedClass) =>
                                     <tr key={addedClass._id}>
                                         <td>
@@ -73,7 +76,7 @@ const MyClasses = () => {
                                         </th>
                                     </tr>
                                 )
-                            }
+                            )}
                         </tbody>
                     </table>
                 </div>

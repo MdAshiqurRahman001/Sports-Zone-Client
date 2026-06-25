@@ -4,19 +4,19 @@ import { AuthContext } from "../Provider/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 
 const useAddedClass = () => {
-    const { user, loading } = useContext(AuthContext);
+    const { user, loading: authLoading } = useContext(AuthContext);
     const [AXIOS] = useAxios();
 
-    const { data: addedclasses = [], refetch } = useQuery({
-        queryKey: ['classes', user?.email],
-        enabled: !loading,
+    const { data: addedclasses = [], refetch, isLoading: loading } = useQuery({
+        queryKey: ['addedclasses', user?.email],
+        enabled: !authLoading && !!user?.email,
         queryFn: async () => {
             const res = await AXIOS(`/classes/email?email=${user.email}`);
             return res.data;
         }
     })
 
-    return [addedclasses, refetch]
+    return [addedclasses, refetch, loading]
 };
 
 export default useAddedClass;

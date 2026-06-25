@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { FaSpinner } from "react-icons/fa";
 import { AuthContext } from "../../Provider/AuthProvider";
+import SkeletonPage from "../UI/SkeletonPage";
 
 const PrivateRoute = ({ children }) => {
 
@@ -9,11 +10,7 @@ const PrivateRoute = ({ children }) => {
     const location = useLocation();
 
     if (loading) {
-            return (
-                <>
-                    <span className="flex justify-center"><FaSpinner className='animate-spin text-4xl my-20'></FaSpinner></span>
-                </>
-            )
+            return <SkeletonPage />
     }
     if (user) {
         return children;

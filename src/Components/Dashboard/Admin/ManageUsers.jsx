@@ -4,11 +4,12 @@ import { FaUserShield, FaUserTie, FaUserCircle, FaCrown, FaChalkboardTeacher } f
 import Swal from "sweetalert2";
 import useAxios from "../../../Hooks/useAxios";
 import { motion } from "framer-motion";
+import SkeletonRow from "../../UI/SkeletonRow";
 
 const ManageUsers = () => {
     const [AXIOS] = useAxios();
 
-    const { data: users = [], refetch } = useQuery(['users'], async () => {
+    const { data: users = [], refetch, isLoading: loading } = useQuery(['users'], async () => {
         const res = await AXIOS.get('/users');
         return res.data;
     });
@@ -73,46 +74,50 @@ const ManageUsers = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-800">
-                            {users.map((user, i) => (
-                                <motion.tr
-                                    key={user._id}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ delay: i * 0.03 }}
-                                    className="bg-slate-900/50 hover:bg-slate-800/50 transition-colors">
-                                    <td className="px-4 py-4 text-slate-500 text-xs">{i + 1}</td>
-                                    <td className="px-4 py-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center flex-shrink-0">
-                                                <span className="text-white text-xs font-bold">
-                                                    {(user.name || 'U').charAt(0).toUpperCase()}
-                                                </span>
+                            {loading ? (
+                                [...Array(5)].map((_, i) => <SkeletonRow key={i} />)
+                            ) : (
+                                users.map((user, i) => (
+                                    <motion.tr
+                                        key={user._id}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ delay: i * 0.03 }}
+                                        className="bg-slate-900/50 hover:bg-slate-800/50 transition-colors">
+                                        <td className="px-4 py-4 text-slate-500 text-xs">{i + 1}</td>
+                                        <td className="px-4 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center flex-shrink-0">
+                                                    <span className="text-white text-xs font-bold">
+                                                        {(user.name || 'U').charAt(0).toUpperCase()}
+                                                    </span>
+                                                </div>
+                                                <span className="font-semibold text-white text-sm">{user.name || '—'}</span>
                                             </div>
-                                            <span className="font-semibold text-white text-sm">{user.name || '—'}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-4 py-4 text-slate-400 text-xs">{user.email}</td>
-                                    <td className="px-4 py-4">{roleBadge(user.role)}</td>
-                                    <td className="px-4 py-4">
-                                        <div className="flex items-center gap-2">
-                                            <button
-                                                onClick={() => handlePromoteAdmin(user)}
-                                                disabled={user.role === 'admin'}
-                                                title="Make Admin"
-                                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                                                <FaCrown className="text-[10px]" /> Admin
-                                            </button>
-                                            <button
-                                                onClick={() => handlePromoteInstructor(user)}
-                                                disabled={user.role === 'instructor'}
-                                                title="Make Instructor"
-                                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                                                <FaUserTie className="text-[10px]" /> Instructor
-                                            </button>
-                                        </div>
-                                    </td>
-                                </motion.tr>
-                            ))}
+                                        </td>
+                                        <td className="px-4 py-4 text-slate-400 text-xs">{user.email}</td>
+                                        <td className="px-4 py-4">{roleBadge(user.role)}</td>
+                                        <td className="px-4 py-4">
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => handlePromoteAdmin(user)}
+                                                    disabled={user.role === 'admin'}
+                                                    title="Make Admin"
+                                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                                                    <FaCrown className="text-[10px]" /> Admin
+                                                </button>
+                                                <button
+                                                    onClick={() => handlePromoteInstructor(user)}
+                                                    disabled={user.role === 'instructor'}
+                                                    title="Make Instructor"
+                                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                                                    <FaUserTie className="text-[10px]" /> Instructor
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </motion.tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>

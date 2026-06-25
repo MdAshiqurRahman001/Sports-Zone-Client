@@ -3,6 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { FaSpinner } from "react-icons/fa";
 import { AuthContext } from "../../Provider/AuthProvider";
 import useVerifyInstructor from "../../Hooks/useVerifyInstructor";
+import SkeletonPage from "../UI/SkeletonPage";
 
 const PrivateInstructorRoutes = ({ children }) => {
 
@@ -11,11 +12,7 @@ const PrivateInstructorRoutes = ({ children }) => {
     const [checkInstructor, checkInstructorLoading] = useVerifyInstructor();
 
     if (loading || checkInstructorLoading) {
-            return (
-                <>
-                    <span className="flex justify-center"><FaSpinner className='animate-spin text-4xl my-20'></FaSpinner></span>
-                </>
-            )
+            return <SkeletonPage />
     }
     if (user && checkInstructor) {
         return children;
