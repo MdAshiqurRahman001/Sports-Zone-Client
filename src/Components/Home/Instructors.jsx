@@ -2,6 +2,7 @@ import useInstructors from "../../Hooks/useInstructors";
 import ShowInstructors from "./ShowInstructors";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import SkeletonCard from "../UI/SkeletonCard";
 
 const containerVariants = {
     hidden: {},
@@ -9,7 +10,7 @@ const containerVariants = {
 };
 
 const Instructors = () => {
-    const [instructors] = useInstructors();
+    const [instructors, , loading] = useInstructors();
 
     return (
         <section className="section-wrapper">
@@ -27,9 +28,13 @@ const Instructors = () => {
                 whileInView="visible"
                 viewport={{ once: true, margin: '-50px' }}
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {instructors.slice(0, 6).map(instructor => (
-                    <ShowInstructors key={instructor._id} instructor={instructor} />
-                ))}
+                {loading ? (
+                    [...Array(6)].map((_, i) => <SkeletonCard key={i} />)
+                ) : (
+                    instructors.slice(0, 6).map(instructor => (
+                        <ShowInstructors key={instructor._id} instructor={instructor} />
+                    ))
+                )}
             </motion.div>
 
             <div className="text-center mt-12">

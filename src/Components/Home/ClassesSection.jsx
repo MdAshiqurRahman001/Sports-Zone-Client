@@ -2,6 +2,7 @@ import usePopularClasses from "../../Hooks/usePopularClasses";
 import ShowClasses from "./ShowClasses";
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom";
+import SkeletonCard from "../UI/SkeletonCard";
 
 const containerVariants = {
     hidden: {},
@@ -9,7 +10,7 @@ const containerVariants = {
 };
 
 const ClassesSection = () => {
-    const [popularClasses] = usePopularClasses();
+    const [popularClasses, , loading] = usePopularClasses();
 
     return (
         <section className="section-wrapper">
@@ -27,9 +28,13 @@ const ClassesSection = () => {
                 whileInView="visible"
                 viewport={{ once: true, margin: '-50px' }}
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {popularClasses.slice(0, 6).map(sortClass => (
-                    <ShowClasses key={sortClass._id} sortClass={sortClass} />
-                ))}
+                {loading ? (
+                    [...Array(6)].map((_, i) => <SkeletonCard key={i} />)
+                ) : (
+                    popularClasses.slice(0, 6).map(sortClass => (
+                        <ShowClasses key={sortClass._id} sortClass={sortClass} />
+                    ))
+                )}
             </motion.div>
 
             <div className="text-center mt-12">

@@ -4,9 +4,10 @@ import formatDate from "../../DateFormat/formatDate";
 import { FaCheck, FaGraduationCap } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import SkeletonCard from "../UI/SkeletonCard";
 
 const EnrolledClass = () => {
-    const [paymentInfo] = usePaymentInfo();
+    const [paymentInfo, , loading] = usePaymentInfo();
 
     const allClasses = paymentInfo.flatMap(item =>
         item.className.map((name, idx) => ({
@@ -28,7 +29,11 @@ const EnrolledClass = () => {
                 <p className="text-slate-400 text-sm">Your active class enrollments.</p>
             </div>
 
-            {allClasses.length === 0 ? (
+            {loading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
+                </div>
+            ) : allClasses.length === 0 ? (
                 <div className="text-center py-20">
                     <div className="w-16 h-16 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center mx-auto mb-4">
                         <FaGraduationCap className="text-2xl text-slate-500" />
